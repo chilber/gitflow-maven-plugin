@@ -138,8 +138,8 @@ public class GitFlowReleaseStartMojo extends AbstractGitFlowMojo {
      */
     @Parameter(property = "branchName")
     private String branchName;
-
     /** {@inheritDoc} */
+    
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         validateConfiguration();
@@ -193,7 +193,9 @@ public class GitFlowReleaseStartMojo extends AbstractGitFlowMojo {
             } else if (!sameBranchName) {
                 fullBranchName += releaseVersion;
             }
-
+            if (gitCheckRemoteBranchExists(fullBranchName)) {
+                throw new MojoFailureException("Release branch" + fullBranchName + "already exists. Cannot start release.");
+            }
             String projectVersion = releaseVersion;
             if (useSnapshotInRelease && !ArtifactUtils.isSnapshot(projectVersion)) {
                 projectVersion = projectVersion + "-" + Artifact.SNAPSHOT_VERSION;
