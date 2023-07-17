@@ -194,6 +194,10 @@ public class GitFlowReleaseStartMojo extends AbstractGitFlowMojo {
                 fullBranchName += releaseVersion;
             }
 
+            if (gitCheckRemoteBranchExists(fullBranchName)) {
+                throw new MojoFailureException("Release branch" + fullBranchName + "already exists. Cannot start release.");
+            }
+            
             String projectVersion = releaseVersion;
             if (useSnapshotInRelease && !ArtifactUtils.isSnapshot(projectVersion)) {
                 projectVersion = projectVersion + "-" + Artifact.SNAPSHOT_VERSION;
